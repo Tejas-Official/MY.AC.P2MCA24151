@@ -1,1 +1,110 @@
-question 1:
+index.html:
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Stock Chart</title>
+</head>
+<body>
+  <div id="root"></div>
+</body>
+</html>
+--------------------------------------------------------------------------------------------
+
+app.js:
+import React from 'react';
+import ReactDOM from 'react-dom';
+import Chart from './Chart';
+
+const App = () => {
+  return (
+    <div>
+      <h1>Stock Price Chart</h1>
+      <Chart />
+    </div>
+  );
+};
+
+ReactDOM.render(<App />, document.getElementById('root'));
+-----------------------------------------------------------------------------------
+chart.js:
+
+import React, { useState, useEffect } from 'react';
+import StockChart from './StockChart';
+
+const mockStockPrices = [
+  { timestamp: '2025-05-01', price: 120 },
+  { timestamp: '2025-05-02', price: 125 },
+  { timestamp: '2025-05-03', price: 123 },
+  { timestamp: '2025-05-04', price: 130 },
+  { timestamp: '2025-05-05', price: 128 },
+];
+
+const Chart = () => {
+  const [stockData, setStockData] = useState([]);
+
+  useEffect(() => {
+    const fetchMockData = () => {
+      setTimeout(() => {
+        setStockData(mockStockPrices);
+      }, 1000); 
+    };
+    fetchMockData();
+  }, []);
+  return (
+    <div className="chart-container">
+      <h2>Stock Price Overview</h2>
+      <StockChart data={stockData} />
+    </div>
+  );
+};
+
+export default Chart;
+---------------------------------------------------------------------------------------------
+stockchart.js:
+
+import React from 'react';
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer
+} from 'recharts';
+
+const StockChart = ({ data }) => {
+  return (
+    <div style={{ width: '100%', height: 400 }}>
+      <ResponsiveContainer>
+        <LineChart
+          data={data}
+          margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
+        >
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="timestamp" />
+          <YAxis />
+          <Tooltip />
+          <Legend />
+          <Line
+            type="monotone"
+            dataKey="price"
+            stroke="#8884d8"
+            strokeWidth={2}
+            dot={{ r: 3 }}
+            activeDot={{ r: 6 }}
+          />
+        </LineChart>
+      </ResponsiveContainer>
+    </div>
+  );
+};
+
+export default StockChart;
+
+
+
